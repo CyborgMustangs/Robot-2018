@@ -14,15 +14,15 @@ TShirtCannon::TShirtCannon(const Controller::Button * activation, int channel, i
 }
 
 void TShirtCannon::update() {
-	if (activation_->wasPressed()) {
-		startTime_ = Timer::GetFPGATimestamp();
-		solenoid_->Set(true);
-	}
 	if (startTime_ != -1) {
 		if (Timer::GetFPGATimestamp() - startTime_ >= SHOOT_TIME) {
 				startTime_ = -1;
 				solenoid_->Set(false);
 		}
+	}
+	if (activation_->wasPressed()) {
+		startTime_ = Timer::GetFPGATimestamp();
+		solenoid_->Set(true);
 	}
 }
 

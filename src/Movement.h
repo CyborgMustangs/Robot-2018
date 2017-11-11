@@ -25,6 +25,8 @@ public:
 
 	~Movement();
 private:
+	void initDriveModes();
+
 	Controller * controller_;
 
 	frc::RobotDrive * drive_;
@@ -33,7 +35,7 @@ private:
 
 	NullDrive * NULL_DRIVE;
 	ArcadeDrive * ARCADE_DRIVE;
-	SplitArcadeDrive * SPLIT_ARCADE_DRIVE;
+	ArcadeDrive * SPLIT_ARCADE_DRIVE;
 	TankDrive * TANK_DRIVE;
 
 	DriveComponent * mode_;

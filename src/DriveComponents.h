@@ -3,10 +3,11 @@
 
 #include "ButtonMap.h"
 #include "Controller.h"
-
 #include "Debug.h"
 
 #include <RobotDrive.h>
+
+#include <array>
 
 class DriveComponent {
 public:
@@ -28,27 +29,34 @@ public:
 
 class ArcadeDrive : public DriveComponent {
 public:
-	ArcadeDrive(frc::RobotDrive * drive, Controller * controller) : DriveComponent(drive), controller_(controller), gear_(3), rotGear_(3) {
-		DebugLog::postDebugString("Arcade Drive Initialized");
-	}
+	ArcadeDrive(frc::RobotDrive * drive, std::array<const Controller::Axis *, 2> axes, std::array<const Controller::Button *, 4> buttons) :
+		DriveComponent(drive),
+		speed_(axes[0]),
+		rotation_(axes[1]),
+		gearDown_(buttons[0]),
+		gearUp_(buttons[1]),
+		rotGearDown_(buttons[2]),
+		rotGearUp_(buttons[3]),
+		gear_(3),
+		rotGear_(3) {}
 	void drive() {
-		double vel = -controller_->getAxis(X360::Axis::LStickY).getState();
-		double rot = -controller_->getAxis(X360::Axis::LStickX).getState();
+		double vel = -speed_->getState();
+		double rot = -rotation_->getState();
 
-		if (controller_->getButton(X360::Button::LB).wasPressed()) {
+		if (gearDown_->wasPressed()) {
 			if (--gear_ < minGear_) gear_ = minGear_;
 		}
-		else if (controller_->getButton(X360::Button::RB).wasPressed()) {
+		else if (gearUp_->wasPressed()) {
 			if (++gear_ > maxGear_) gear_ = maxGear_;
 		}
 		vel *= (double)(gear_) / (double)(maxGear_);
 		if (vel < -1.0) vel = -1.0;
 		else if (vel > 1.0) vel = 1.0;
 
-		if (controller_->getButton(X360::Button::L3).wasPressed()) {
+		if (rotGearDown_->wasPressed()) {
 			if (--rotGear_ < minGear_) rotGear_ = minGear_;
 		}
-		else if (controller_->getButton(X360::Button::R3).wasPressed()) {
+		else if (rotGearUp_->wasPressed()) {
 			if (++rotGear_ > maxGear_) rotGear_ = maxGear_;
 		}
 		rot *= (double)(rotGear_) / (double)(maxGear_);
@@ -58,7 +66,12 @@ public:
 		drive_->ArcadeDrive(vel, rot);
 	}
 private:
-	Controller * controller_;
+	const Controller::Axis * speed_;
+	const Controller::Axis * rotation_;
+	const Controller::Button * gearDown_;
+	const Controller::Button * gearUp_;
+	const Controller::Button * rotGearDown_;
+	const Controller::Button * rotGearUp_;
 
 	char gear_;
 	char rotGear_;
@@ -69,17 +82,21 @@ private:
 
 class TankDrive : public DriveComponent {
 public:
-	TankDrive(frc::RobotDrive * drive, Controller * controller) : DriveComponent(drive), controller_(controller), gear_(3) {
-		DebugLog::postDebugString("Tank Drive Initialized");
-	}
+	TankDrive(frc::RobotDrive * drive, std::array<const Controller::Axis *, 2> axes, std::array<const Controller::Button *, 2> buttons) :
+		DriveComponent(drive),
+		lSpeed(axes[0]),
+		rSpeed(axes[1]),
+		gearDown(buttons[0]),
+		gearUp(buttons[1]),
+		gear_(3) {}
 	void drive() {
-		double lVel = -controller_->getAxis(X360::Axis::LStickY).getState();
-		double rVel = -controller_->getAxis(X360::Axis::RStickY).getState();
+		double lVel = -lSpeed->getState();
+		double rVel = -rSpeed->getState();
 
-		if (controller_->getButton(X360::Button::LB).wasPressed()) {
+		if (gearDown->wasPressed()) {
 			if (--gear_ < minGear_) gear_ = minGear_;
 		}
-		else if (controller_->getButton(X360::Button::RB).wasPressed()) {
+		else if (gearUp->wasPressed()) {
 			if (++gear_ > maxGear_) gear_ = maxGear_;
 		}
 
@@ -96,50 +113,12 @@ public:
 		drive_->TankDrive(lVel, rVel);
 	}
 private:
-	Controller * controller_;
+	const Controller::Axis * lSpeed;
+	const Controller::Axis * rSpeed;
+	const Controller::Button * gearDown;
+	const Controller::Button * gearUp;
 
 	char gear_;
-
-	static const char minGear_ = 3;
-	static const char maxGear_ = 6;
-};
-
-class SplitArcadeDrive : public DriveComponent {
-public:
-	SplitArcadeDrive(frc::RobotDrive * drive, Controller * controller) : DriveComponent(drive), controller_(controller), gear_(3), rotGear_(3) {
-		DebugLog::postDebugString("Split Arcade Drive Initialized");
-	}
-	void drive() {
-		double vel = -controller_->getAxis(X360::Axis::LStickY).getState();
-		double rot = -controller_->getAxis(X360::Axis::RStickX).getState();
-
-		if (controller_->getButton(X360::Button::LB).wasPressed()) {
-			if (--gear_ < minGear_) gear_ = minGear_;
-		}
-		else if (controller_->getButton(X360::Button::RB).wasPressed()) {
-			if (++gear_ > maxGear_) gear_ = maxGear_;
-		}
-		vel *= (double)(gear_) / (double)(maxGear_);
-		if (vel < -1.0) vel = -1.0;
-		else if (vel > 1.0) vel = 1.0;
-
-		if (controller_->getButton(X360::Button::L3).wasPressed()) {
-			if (--rotGear_ < minGear_) rotGear_ = minGear_;
-		}
-		else if (controller_->getButton(X360::Button::R3).wasPressed()) {
-			if (++rotGear_ > maxGear_) rotGear_ = maxGear_;
-		}
-		rot *= (double)(rotGear_) / (double)(maxGear_);
-		if (rot < -1.0) rot = -1.0;
-		else if (rot > 1.0) rot = 1.0;
-
-		drive_->ArcadeDrive(vel, rot);
-	}
-private:
-	Controller * controller_;
-
-	char gear_;
-	char rotGear_;
 
 	static const char minGear_ = 3;
 	static const char maxGear_ = 6;

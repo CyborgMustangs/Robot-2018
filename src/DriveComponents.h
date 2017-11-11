@@ -17,6 +17,13 @@ protected:
 	frc::RobotDrive * drive_;
 };
 
+class NullDrive : public DriveComponent {
+	NullDrive() {}
+	void drive() {
+		DebugLog::postDebugString("Attempted to drive with null component.");
+	}
+};
+
 class ArcadeDrive : public DriveComponent {
 public:
 	ArcadeDrive(frc::RobotDrive * drive, Controller * controller) : DriveComponent(drive), controller_(controller), gear_(3), rotGear_(3) {

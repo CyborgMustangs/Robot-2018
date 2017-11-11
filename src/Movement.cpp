@@ -1,14 +1,31 @@
 #include "Movement.h"
 #include "Debug.h"
 
-Movement::Movement() : mode_(nullptr), controller_(nullptr), drive_(nullptr) {}
+Movement::Movement() :
+	controller_(nullptr),
+	drive_(nullptr),
+	frontLeft(nullptr),
+	frontRight(nullptr),
+	backLeft(nullptr),
+	backRight(nullptr),
+	TANK_DRIVE(nullptr),
+	ARCADE_DRIVE(nullptr),
+	SPLIT_ARCADE_DRIVE(nullptr)
+{
+	NULL_DRIVE = new NullDrive();
+	mode_ = NULL_DRIVE;
+}
 
 void Movement::init(int frontLeftPort, int frontRightPort, int backLeftPort, int backRightPort, DriveMode mode, Controller * controller) {
 	controller_ = controller;
 
+	if (frontLeft != nullptr) delete frontLeft;
 	frontLeft = new Talon(frontLeftPort);
+	if (frontRight != nullptr) delete frontRight;
 	frontRight = new Talon(frontRightPort);
+	if (backLeft != nullptr) delete backLeft;
 	backLeft = new Talon(backLeftPort);
+	if (backRight != nullptr) delete backRight;
 	backRight = new Talon(backRightPort);
 
 	if (drive_ != nullptr) delete drive_;
@@ -28,7 +45,6 @@ void Movement::init(int frontLeftPort, int frontRightPort, int backLeftPort, int
 }
 
 Movement::Movement(int frontLeftPort, int frontRightPort, int backLeftPort, int backRightPort, DriveMode mode, Controller * controller) :
-	mode_(nullptr),
 	controller_(controller)
 {
 	frontLeft = new Talon(frontLeftPort);
@@ -39,6 +55,7 @@ Movement::Movement(int frontLeftPort, int frontRightPort, int backLeftPort, int 
 	drive_ = new frc::RobotDrive(frontLeftPort, backLeftPort, frontRightPort, backRightPort);
 	drive_->SetSafetyEnabled(false);
 
+	NULL_DRIVE = new NullDrive();
 	ARCADE_DRIVE = new ArcadeDrive(drive_, controller_);
 	SPLIT_ARCADE_DRIVE = new SplitArcadeDrive(drive_, controller_);
 	TANK_DRIVE = new TankDrive(drive_, controller_);
@@ -47,10 +64,10 @@ Movement::Movement(int frontLeftPort, int frontRightPort, int backLeftPort, int 
 }
 
 void Movement::update() {
-	if (mode_ != nullptr) mode_->drive();
+	mode_ = mode_->drive();
 }
 
-void Movement::changeDriveMode(DriveMode mode) { //change to string so you can directly change from chooser
+void Movement::changeDriveMode(DriveMode mode) {
 	switch(mode) {
 	case DriveMode::arcadeDrive:
 		mode_ = ARCADE_DRIVE;
@@ -62,7 +79,7 @@ void Movement::changeDriveMode(DriveMode mode) { //change to string so you can d
 		mode_ = TANK_DRIVE;
 		break;
 	default:
-		mode_ = nullptr;
+		mode_ = NULL_DRIVE;
 		DebugLog::postDebugString("DriveMode has been set to an invalid value.");
 		break;
 	}
@@ -73,12 +90,13 @@ void Movement::changeDriveMode(std::string mode) {
 	if (mode == "Split Arcade Drive") mode_ = SPLIT_ARCADE_DRIVE;
 	if (mode == "Tank Drive") mode_ = TANK_DRIVE;
 	else {
-		mode_ = nullptr;
+		mode_ = NULL_DRIVE;
 		DebugLog::postDebugString("DriveMode has been set to an invalid string.");
 	}
 }
 
 Movement::~Movement() {
+	delete NULL_DRIVE;
 	if (ARCADE_DRIVE != nullptr) delete ARCADE_DRIVE;
 	if (SPLIT_ARCADE_DRIVE != nullptr) delete SPLIT_ARCADE_DRIVE;
 	if (TANK_DRIVE != nullptr) delete TANK_DRIVE;

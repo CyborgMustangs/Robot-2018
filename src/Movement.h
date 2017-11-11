@@ -28,6 +28,7 @@ private:
 	frc::RobotDrive * drive_;
 
 	DriveComponent * mode_;
+	NullDrive NULL_DRIVE;
 	ArcadeDrive * ARCADE_DRIVE;
 	SplitArcadeDrive * SPLIT_ARCADE_DRIVE;
 	TankDrive * TANK_DRIVE;

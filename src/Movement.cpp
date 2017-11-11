@@ -8,9 +8,9 @@ Movement::Movement() :
 	frontRight(nullptr),
 	backLeft(nullptr),
 	backRight(nullptr),
-	TANK_DRIVE(nullptr),
 	ARCADE_DRIVE(nullptr),
-	SPLIT_ARCADE_DRIVE(nullptr)
+	SPLIT_ARCADE_DRIVE(nullptr),
+TANK_DRIVE(nullptr)
 {
 	NULL_DRIVE = new NullDrive();
 	mode_ = NULL_DRIVE;

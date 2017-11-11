@@ -3,7 +3,7 @@
 
 #include <Joystick.h>
 
-#include <map> //unordered_map doesn't work because eclipse is broken
+#include <unordered_map>
 
 class Controller {
 	class Button {
@@ -68,8 +68,8 @@ public:
 	~Controller();
 private:
 	frc::Joystick * controller_;
-	std::map<int, Button> buttons_;
-	std::map<int, Axis> axes_;
+	std::unordered_map<int, Button> buttons_;
+	std::unordered_map<int, Axis> axes_;
 };
 
 #endif /* SRC_CONTROLLER_H_ */

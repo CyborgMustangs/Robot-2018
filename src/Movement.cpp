@@ -30,7 +30,6 @@ void Movement::init(int frontLeftPort, int frontRightPort, int backLeftPort, int
 
 	if (drive_ != nullptr) delete drive_;
 	drive_ = new frc::RobotDrive(frontLeft, backLeft, frontRight, backRight);
-	drive_->SetSafetyEnabled(false);
 
 	if (ARCADE_DRIVE != nullptr) delete ARCADE_DRIVE;
 	ARCADE_DRIVE = new ArcadeDrive(drive_, controller_);
@@ -53,7 +52,6 @@ Movement::Movement(int frontLeftPort, int frontRightPort, int backLeftPort, int 
 	backRight = new Talon(backRightPort);
 
 	drive_ = new frc::RobotDrive(frontLeftPort, backLeftPort, frontRightPort, backRightPort);
-	drive_->SetSafetyEnabled(false);
 
 	NULL_DRIVE = new NullDrive();
 	ARCADE_DRIVE = new ArcadeDrive(drive_, controller_);

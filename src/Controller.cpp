@@ -19,12 +19,12 @@ void Controller::update() {
 	}
 }
 
-Controller::Button Controller::getButton(int number) {
+const Controller::Button & Controller::getButton(int number) {
 	if (buttons_.find(number) == buttons_.end()) buttons_.emplace(std::make_pair(number, Button(number, this)));
 	return buttons_[number];
 }
 
-Controller::Axis Controller::getAxis(int number) {
+const Controller::Axis & Controller::getAxis(int number) {
 	if (axes_.find(number) == axes_.end()) axes_.emplace(std::make_pair(number, Axis(number, this)));
 	return axes_[number];
 }

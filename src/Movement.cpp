@@ -1,5 +1,8 @@
 #include "Movement.h"
+#include "ButtonMap.h"
 #include "Debug.h"
+
+#include <array>
 
 Movement::Movement() :
 	controller_(nullptr),
@@ -31,14 +34,7 @@ void Movement::init(int frontLeftPort, int frontRightPort, int backLeftPort, int
 	if (drive_ != nullptr) delete drive_;
 	drive_ = new frc::RobotDrive(frontLeft, backLeft, frontRight, backRight);
 
-	if (ARCADE_DRIVE != nullptr) delete ARCADE_DRIVE;
-	ARCADE_DRIVE = new ArcadeDrive(drive_, controller_);
-
-	if (SPLIT_ARCADE_DRIVE != nullptr) delete SPLIT_ARCADE_DRIVE;
-	SPLIT_ARCADE_DRIVE = new SplitArcadeDrive(drive_, controller_);
-
-	if (TANK_DRIVE != nullptr) delete TANK_DRIVE;
-	TANK_DRIVE = new TankDrive(drive_, controller_);
+	initDriveModes();
 
 	changeDriveMode(mode);
 }
@@ -54,9 +50,8 @@ Movement::Movement(int frontLeftPort, int frontRightPort, int backLeftPort, int 
 	drive_ = new frc::RobotDrive(frontLeftPort, backLeftPort, frontRightPort, backRightPort);
 
 	NULL_DRIVE = new NullDrive();
-	ARCADE_DRIVE = new ArcadeDrive(drive_, controller_);
-	SPLIT_ARCADE_DRIVE = new SplitArcadeDrive(drive_, controller_);
-	TANK_DRIVE = new TankDrive(drive_, controller_);
+
+	initDriveModes();
 
 	changeDriveMode(mode);
 }
@@ -103,4 +98,32 @@ Movement::~Movement() {
 	if (frontRight != nullptr) delete frontRight;
 	if (backLeft != nullptr) delete backLeft;
 	if (backRight != nullptr) delete backRight;
+}
+
+void Movement::initDriveModes() {
+	//arcade drive
+	if (ARCADE_DRIVE != nullptr) delete ARCADE_DRIVE;
+	std::array<const Controller::Axis *, 2> axes = {
+			&controller_->getAxis(X360::Axis::LStickY),
+			&controller_->getAxis(X360::Axis::LStickX) };
+	std::array<const Controller::Button *, 4> buttons = {
+			&controller_->getButton(X360::Button::LB),
+			&controller_->getButton(X360::Button::RB),
+			&controller_->getButton(X360::Button::L3),
+			&controller_->getButton(X360::Button::R3) };
+	ARCADE_DRIVE = new ArcadeDrive(drive_, axes, buttons);
+
+	//split arcade drive
+	if (SPLIT_ARCADE_DRIVE != nullptr) delete SPLIT_ARCADE_DRIVE;
+	axes[1] = &controller_->getAxis(X360::Axis::RStickX);
+	SPLIT_ARCADE_DRIVE = new ArcadeDrive(drive_, axes, buttons);
+
+	//tank drive
+	if (TANK_DRIVE != nullptr) delete TANK_DRIVE;
+	axes[1] = &controller_->getAxis(X360::Axis::RStickY);
+	TANK_DRIVE = new TankDrive(
+			drive_,
+			axes,
+			{buttons[0], buttons[1]}
+	);
 }

@@ -3,9 +3,10 @@
 
 #include <Joystick.h>
 
-#include <map> //unordered_map doesn't work because eclipse is broken
+#include <unordered_map>
 
 class Controller {
+public:
 	class Button {
 	public:
 		Button() : num(-1), state(false), prevState(false), parent_(nullptr) {}
@@ -21,11 +22,11 @@ class Controller {
 			state = parent_->controller_->GetRawButton(num);
 		}
 
-		bool isDown() { return state; }
-		bool wasPressed() {
+		bool isDown() const { return state; }
+		bool wasPressed() const {
 			return state && !prevState;
 		}
-		bool wasReleased() {
+		bool wasReleased() const {
 			return !state && prevState;
 		}
 
@@ -35,7 +36,6 @@ class Controller {
 		bool prevState;
 		Controller * parent_;
 	};
-
 	class Axis {
 	public:
 		Axis() : num(-1), state(0.0), parent_(nullptr) {}
@@ -49,27 +49,26 @@ class Controller {
 			state = parent_->controller_->GetRawAxis(num);
 		}
 
-		double getState() { return state; }
+		double getState() const { return state; }
 	private:
 		int num;
 		double state;
 		Controller * parent_;
 	};
 
-public:
 	Controller();
 	void init(int port);
 	Controller(int port);
 	void update();
 
-	Button getButton(int number);
-	Axis getAxis(int number);
+	const Button & getButton(int number);
+	const Axis & getAxis(int number);
 
 	~Controller();
 private:
 	frc::Joystick * controller_;
-	std::map<int, Button> buttons_;
-	std::map<int, Axis> axes_;
+	std::unordered_map<int, Button> buttons_;
+	std::unordered_map<int, Axis> axes_;
 };
 
 #endif /* SRC_CONTROLLER_H_ */

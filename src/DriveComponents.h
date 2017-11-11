@@ -58,12 +58,13 @@ public:
 		drive_->ArcadeDrive(vel, rot);
 	}
 private:
-	static const char minGear_ = 3;
-	static const char maxGear_ = 6;
+	Controller * controller_;
+
 	char gear_;
 	char rotGear_;
 
-	Controller * controller_;
+	static const char minGear_ = 3;
+	static const char maxGear_ = 6;
 };
 
 class TankDrive : public DriveComponent {
@@ -95,11 +96,12 @@ public:
 		drive_->TankDrive(lVel, rVel);
 	}
 private:
-	static const char minGear_ = 3;
-	static const char maxGear_ = 6;
+	Controller * controller_;
+
 	char gear_;
 
-	Controller * controller_;
+	static const char minGear_ = 3;
+	static const char maxGear_ = 6;
 };
 
 class SplitArcadeDrive : public DriveComponent {
@@ -134,12 +136,13 @@ public:
 		drive_->ArcadeDrive(vel, rot);
 	}
 private:
-	static const char minGear_ = 3;
-	static const char maxGear_ = 6;
+	Controller * controller_;
+
 	char gear_;
 	char rotGear_;
 
-	Controller * controller_;
+	static const char minGear_ = 3;
+	static const char maxGear_ = 6;
 };
 
 #endif /* SRC_DRIVECOMPONENTS_H_ */

@@ -8,7 +8,7 @@
 class Controller {
 	class Button {
 	public:
-		Button() {}
+		Button() : num(-1), state(false), prevState(false), parent_(nullptr) {}
 		void init(int number, Controller * parent) {
 			num = number;
 			state = false;
@@ -38,7 +38,7 @@ class Controller {
 
 	class Axis {
 	public:
-		Axis() {}
+		Axis() : num(-1), state(0.0), parent_(nullptr) {}
 		void init(int number, Controller * parent) {
 			num = number;
 			state = 0.0;

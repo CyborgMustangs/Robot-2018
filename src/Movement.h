@@ -25,17 +25,18 @@ public:
 
 	~Movement();
 private:
+	Controller * controller_;
+
 	frc::RobotDrive * drive_;
 
-	DriveComponent * mode_;
+	Talon *frontLeft, *frontRight, *backLeft, *backRight;
+
 	NullDrive * NULL_DRIVE;
 	ArcadeDrive * ARCADE_DRIVE;
 	SplitArcadeDrive * SPLIT_ARCADE_DRIVE;
 	TankDrive * TANK_DRIVE;
 
-	Controller * controller_;
-
-	Talon *frontLeft, *frontRight, *backLeft, *backRight;
+	DriveComponent * mode_;
 };
 
 #endif /* SRC_MOVEMENT_H_ */

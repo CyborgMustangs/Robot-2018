@@ -10,6 +10,7 @@
 
 class DriveComponent {
 public:
+	DriveComponent() : drive_(nullptr) {}
 	DriveComponent(frc::RobotDrive * drive) : drive_(drive) {}
 	virtual void drive() = 0;
 	virtual ~DriveComponent() {}
@@ -18,6 +19,7 @@ protected:
 };
 
 class NullDrive : public DriveComponent {
+public:
 	NullDrive() {}
 	void drive() {
 		DebugLog::postDebugString("Attempted to drive with null component.");

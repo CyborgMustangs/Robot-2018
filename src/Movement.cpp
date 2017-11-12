@@ -13,7 +13,7 @@ Movement::Movement() :
 	backRight(nullptr),
 	ARCADE_DRIVE(nullptr),
 	SPLIT_ARCADE_DRIVE(nullptr),
-TANK_DRIVE(nullptr)
+	TANK_DRIVE(nullptr)
 {
 	NULL_DRIVE = new NullDrive();
 	mode_ = NULL_DRIVE;
@@ -40,7 +40,10 @@ void Movement::init(int frontLeftPort, int frontRightPort, int backLeftPort, int
 }
 
 Movement::Movement(int frontLeftPort, int frontRightPort, int backLeftPort, int backRightPort, DriveMode mode, Controller * controller) :
-	controller_(controller)
+	controller_(controller),
+	ARCADE_DRIVE(nullptr),
+	SPLIT_ARCADE_DRIVE(nullptr),
+	TANK_DRIVE(nullptr)
 {
 	frontLeft = new Talon(frontLeftPort);
 	frontRight = new Talon(frontRightPort);

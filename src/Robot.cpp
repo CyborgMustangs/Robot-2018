@@ -1,5 +1,6 @@
-#include <Movement.h>
-#include <TShirtCannon.h>
+#include "Movement.h"
+#include "CubeManipulator.h"
+#include "Climber.h"
 
 #include <iostream>
 #include <memory>
@@ -22,7 +23,8 @@ public:
 
 		controller_.init(0);
 		driveTrain_.init(1, 2, 3, 4, DriveMode::splitArcadeDrive, &controller_);
-		shirtCannon_.init(&controller_.getButton(X360::Button::A), 0); //get proper channel
+		//manipulator_.init(0, 0, 0, &controller_);
+		//climber_.init(0, &(controller_->getButton(X360::Button::Y)), &(controller_->getButton(X360::Button::B)));
 	}
 	void AutonomousInit() override {
 
@@ -45,7 +47,8 @@ public:
 
 		controller_.update();
 		driveTrain_.update();
-		shirtCannon_.update();
+		//manipulator_.update();
+		//climber_.update();
 	}
 
 	void TestPeriodic() {
@@ -63,7 +66,8 @@ private:
 
 	Controller controller_;
 	Movement driveTrain_;
-	TShirtCannon shirtCannon_;
+	//CubeManipulator manipulator_;
+	//Climber climber_;
 };
 
 START_ROBOT_CLASS(Robot)

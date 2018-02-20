@@ -24,12 +24,16 @@ void Movement::init(int frontLeftPort, int frontRightPort, int backLeftPort, int
 
 	if (frontLeft != nullptr) delete frontLeft;
 	frontLeft = new Talon(frontLeftPort);
+	frontLeft->SetInverted(true); //TODO
 	if (frontRight != nullptr) delete frontRight;
 	frontRight = new Talon(frontRightPort);
+	frontRight->SetInverted(true);
 	if (backLeft != nullptr) delete backLeft;
 	backLeft = new Talon(backLeftPort);
+	backLeft->SetInverted(true);
 	if (backRight != nullptr) delete backRight;
 	backRight = new Talon(backRightPort);
+	backRight->SetInverted(true);
 
 	if (drive_ != nullptr) delete drive_;
 	drive_ = new frc::RobotDrive(frontLeft, backLeft, frontRight, backRight);
